@@ -74,15 +74,15 @@ public class Parser {
         return searchNode(prefix) != null;
     }
 
-    public TrieNode searchNode(String str){
+    public TrieNode searchNode(String str) {
         Map<Character, TrieNode> children = root.children;
         TrieNode trieNode = null;
-        for(int i=0; i<str.length(); i++){
+        for (int i = 0; i < str.length(); i++) {
             char letter = str.charAt(i);
-            if(children.containsKey(letter)){
+            if (children.containsKey(letter)) {
                 trieNode = children.get(letter);
                 children = trieNode.children;
-            }else{
+            } else {
                 return null;
             }
         }
