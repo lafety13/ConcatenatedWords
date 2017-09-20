@@ -1,4 +1,4 @@
-package com.app.java;
+package com.app;
 
 import java.util.HashMap;
 
@@ -11,12 +11,5 @@ public class TrieNode {
 
     public TrieNode(char c){
         this.c = c;
-    }
-
-    @Override
-    public String toString() {
-        return "TrieNode{" +
-                "children=" + children +
-                '}';
     }
 }

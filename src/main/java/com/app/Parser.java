@@ -1,9 +1,12 @@
-package com.app.java;
+package com.app;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Parser {
+    private int totalConcatWord;
+    private String firstLongest = "";
+    private String previousWord = "";
+    private String secondLongest = "";
     private TrieNode root;
 
     public Parser() {
@@ -14,22 +17,47 @@ public class Parser {
     public void insert(String word) {
         HashMap<Character, TrieNode> children = root.children;
 
-        for(int i = 0; i < word.length(); i++){
+        for (int i = 0; i < word.length(); i++) {
             char letter = word.charAt(i);
 
             TrieNode trieNode;
-            if(children.containsKey(letter)){
+            if (children.containsKey(letter)) {
                 trieNode = children.get(letter);
-            }else{
+            } else {
                 trieNode = new TrieNode(letter);
                 children.put(letter, trieNode);
             }
-
             children = trieNode.children;
 
             //set leaf node
-            if(i==word.length()-1)
+            if (i == word.length() - 1) {
                 trieNode.isLeaf = true;
+                findLongestAndSecondLongestConcatWord(word);
+                countConcatWord(word);
+                previousWord = word;
+            }
+        }
+    }
+
+    public <T extends Collection<String>> void insert(T items) {
+        if (items.isEmpty()) {
+            return;
+        }
+        for (String item : items) {
+            insert(item);
+        }
+    }
+
+    private void countConcatWord(String word) {
+        if (word.contains(previousWord)) {
+            totalConcatWord++;
+        }
+    }
+
+    private void findLongestAndSecondLongestConcatWord(String word) {
+        if (firstLongest.length() <= word.length() && word.contains(previousWord)) {
+            secondLongest = firstLongest;
+            firstLongest = word;
         }
     }
 
@@ -62,11 +90,15 @@ public class Parser {
         return trieNode;
     }
 
-    @Override
-    public String toString() {
-        return "Parser{" +
-                "root=" + root +
-                '}';
+    public int getTotalConcatWord() {
+        return totalConcatWord;
     }
 
+    public String getFirstLongest() {
+        return firstLongest;
+    }
+
+    public String getSecondLongest() {
+        return secondLongest;
+    }
 }
