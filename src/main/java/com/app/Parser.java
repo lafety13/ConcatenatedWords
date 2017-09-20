@@ -3,55 +3,78 @@ package com.app;
 import java.util.*;
 
 public class Parser {
-    private int totalConcatWord;
     private String firstLongest = "";
     private String previousWord = "";
     private String secondLongest = "";
+    private List<String> concatenatedWords = new ArrayList<>();
     private TrieNode root;
 
     public Parser() {
         root = new TrieNode();
     }
 
-    // Inserts a word into the trie.
-    public void insert(String word) {
-        HashMap<Character, TrieNode> children = root.children;
 
-        for (int i = 0; i < word.length(); i++) {
-            char letter = word.charAt(i);
-
-            TrieNode trieNode;
-            if (children.containsKey(letter)) {
-                trieNode = children.get(letter);
-            } else {
-                trieNode = new TrieNode(letter);
-                children.put(letter, trieNode);
-            }
-            children = trieNode.children;
-
-            //set leaf node
-            if (i == word.length() - 1) {
-                trieNode.isLeaf = true;
-                findLongestAndSecondLongestConcatWord(word);
-                countConcatWord(word);
-                previousWord = word;
-            }
-        }
-    }
-
-    public <T extends Collection<String>> void insert(T items) {
-        if (items.isEmpty()) {
+    public void insert(List<String> words) {
+        if (words.isEmpty()) {
             return;
         }
-        for (String item : items) {
-            insert(item);
+
+        for (String word : words) {
+            HashMap<Character, TrieNode> children = root.children;
+
+            for (int i = 0; i < word.length(); i++) {
+                char letter = word.charAt(i);
+
+                TrieNode trieNode;
+                if (children.containsKey(letter)) {
+                    trieNode = children.get(letter);
+                } else {
+                    trieNode = new TrieNode(letter);
+                    children.put(letter, trieNode);
+                }
+                children = trieNode.children;
+
+                //set leaf node
+                if (i == word.length() - 1) {
+                    trieNode.isLeaf = true;
+                    findLongestAndSecondLongestConcatWord(word);
+                    previousWord = word;
+                }
+            }
+        }
+        findTotalConcatenatedWords(words);
+    }
+
+    private void findTotalConcatenatedWords(List<String> words) {
+        Set<String> preWords = new HashSet<>();
+        words.sort(new Comparator<String>() {
+            public int compare (String s1, String s2) {
+                return s1.length() - s2.length();
+            }
+        });
+
+        for (String word : words) {
+            if (canForm(word, preWords)) {
+                concatenatedWords.add(word);
+            }
+            preWords.add(word);
         }
     }
 
-    private void countConcatWord(String word) {
-        if (word.contains(previousWord)) {
-            totalConcatWord++;
+    private static boolean canForm(String word, Set<String> dict) {
+        if (dict.isEmpty()) return false;
+        boolean[] dp = new boolean[word.length() + 1];
+        dp[0] = true;
+        for (int i = 1; i <= word.length(); i++) {
+            for (int j = 0; j < i; j++) {
+                if (!dp[j]) continue;
+                if (dict.contains(word.substring(j, i))) {
+                    dp[i] = true;
+                    break;
+                }
+            }
         }
+        return dp[word.length()];
     }
 
     private void findLongestAndSecondLongestConcatWord(String word) {
@@ -91,7 +114,11 @@ public class Parser {
     }
 
     public int getTotalConcatWord() {
-        return totalConcatWord;
+        return concatenatedWords.size();
+    }
+
+    public List<String> getConcatenatedWords() {
+        return concatenatedWords;
     }
 
     public String getFirstLongest() {
