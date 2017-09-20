@@ -13,7 +13,6 @@ public class Parser {
         root = new TrieNode();
     }
 
-
     public void insert(List<String> words) {
         if (words.isEmpty()) {
             return;
