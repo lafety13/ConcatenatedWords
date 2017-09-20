@@ -8,6 +8,7 @@ public class Parser {
     private String secondLongest = "";
     private List<String> concatenatedWords = new ArrayList<>();
     private TrieNode root;
+    private int total = 0;
 
     public Parser() {
         root = new TrieNode();
@@ -119,6 +120,10 @@ public class Parser {
 
     public List<String> getConcatenatedWords() {
         return concatenatedWords;
+    }
+
+    public int getTotal() {
+        return total;
     }
 
     public String getFirstLongest() {
