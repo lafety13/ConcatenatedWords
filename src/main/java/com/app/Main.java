@@ -17,7 +17,6 @@ public class Main {
             parser.insert(stringList);
             long end = System.currentTimeMillis();
 
-            System.out.println();
             System.out.println("Time taken: " + (end - start) + "ms");
             System.out.println("Total concatenated words are " + parser.getTotalConcatWord());
             System.out.println("The first longest concatenated word is " + parser.getFirstLongest() + " - " + parser.getFirstLongest().length());
